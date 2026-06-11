@@ -1,0 +1,6 @@
+site,state,site_type,avg_employees,hours_per_worker,injury_rate,lost_time_rate
+Hawthorne,CA,Flagship manufacturing,6925,2451,1.50,0.75
+Brownsville (Starbase),TX,New / rapidly scaling,2161,2398,4.93,4.00
+McGregor,TX,Engine test,610,2421,2.60,1.80
+Redmond,WA,Starlink manufacturing,1430,2634,1.20,0.67
+Cape Canaveral,FL,Launch operations,1531,2156,1.67,1.07
