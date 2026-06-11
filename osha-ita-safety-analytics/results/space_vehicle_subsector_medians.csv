@@ -1,0 +1,4 @@
+naics_code,industry,est_years,distinct_est,median_tcr
+336414,Guided missile and space vehicle manufacturing,588,283,0.40
+336415,Guided missile and space vehicle propulsion unit and parts manufacturing,291,127,0.60
+336419,Other guided missile and space vehicle parts and auxiliary equipment manufacturing,218,117,0.60

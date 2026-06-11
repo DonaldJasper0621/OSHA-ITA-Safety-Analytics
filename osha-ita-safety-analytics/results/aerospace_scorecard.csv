@@ -1,0 +1,26 @@
+establishment_id,company,establishment,state,naics,industry,years_reported,years_above_peer,avg_tcr,avg_peer_median,avg_employees
+55757,"LMI Aerospace, Inc.","LMI - Wichita - Hillside - Esthner",KS,336413,"Aircraft assemblies, subassemblies, and parts (except engines) manufacturing",3,3,14.40,1.67,18
+897255,"Lafarge and Egge, LLC","L&E Tubing, LLC",WA,336411,"Aircraft manufacturing",4,4,13.20,1.08,34
+445611,"Scaled Composites, LLC.","Scaled Composites, LLC.",CA,336411,"Aircraft manufacturing",4,4,10.15,1.18,333
+110098,"Lockheed Martin Corporation","Lockheed Martin Corporation Clarksburg (1508)",WV,336413,"",8,8,10.08,1.33,92
+383613,"RTC Aerospace - Chatsworth Division, Inc.","RTC Aerospace - Chatsworth Division, Inc.",CA,336413,"Aircraft assemblies, subassemblies, and parts (except engines) manufacturing",5,5,9.44,1.32,161
+305714,"Swift Engineering, Inc.","San Clemente Headquarters",CA,336413,"Aircraft assemblies, subassemblies, and parts (except engines) manufacturing",6,6,9.13,1.27,99
+421340,"Safran Landing Systems Wheel & Brake Services, LLC","Safran Landing Systems (LAS)",NV,336411,"Aircraft overhauling",6,5,9.13,1.15,35
+230138,"PCX Aerostructures, LLC","PCX - CT",CT,336413,"Aircraft assemblies, subassemblies, and parts (except engines) manufacturing",3,3,9.00,1.53,164
+572305,"GKN Aerospace","GKN Aerospace Services Structures LLC / GKN Aerospace Engine Systems",CT,336412,"Aircraft engine and engine parts (except carburetors, pistons, piston rings, valves) manufacturing",5,5,8.72,1.06,260
+429736,"Wipaire, Inc.","Wipaire - Westgate",MN,336413,"Aircraft assemblies, subassemblies, and parts (except engines) manufacturing",3,3,8.67,1.33,69
+650812,"Pioneer Aerostructures","Pioneer Aerostructures",MT,336411,"Aircraft manufacturing",5,4,8.40,1.10,40
+74849,"Aerocet, Inc.","Aerocet, Inc.",ID,336413,"Aircraft auxiliary parts (e.g., crop dusting, external fuel tanks, inflight refueling equipment) manufacturing",3,3,8.33,1.67,50
+682826,"BASLER TURBO CONVERSIONS, LLC","BASLER TURBO CONVERSIONS, LLC",WI,336411,"Aircraft manufacturing",4,4,8.30,1.13,70
+110099,"Lockheed Martin Corporation","Lockheed Martin Corporation US MS Meridian (1507)",MS,336413,"Aircraft assemblies, subassemblies, and parts (except engines) manufacturing",8,8,8.20,1.30,151
+55767,"LMI Aerospace, Inc.","LMI - Savannah",GA,336413,"Aircraft assemblies, subassemblies, and parts (except engines) manufacturing",4,3,8.20,1.50,19
+752154,"Nor-Ral, Inc","Nor-Ral, Inc",GA,336413,"Aircraft assemblies, subassemblies, and parts (except engines) manufacturing",4,4,8.10,1.15,56
+47348,"Ashley Machine & Tool","Ashley Machine & Tool",PA,336413,"Aircraft assemblies, subassemblies, and parts (except engines) manufacturing",7,7,8.03,1.34,41
+1007816,"AMI Aviation Services","AMI Aviation Services",FL,336413,"Aircraft assemblies, subassemblies, and parts (except engines) manufacturing",3,3,8.00,1.13,27
+934085,"PowerHouse Resources International LLC","Davis Monthan AFB",NC,336411,"Aircraft conversions (i.e., major modifications to system)",3,3,7.93,1.10,124
+995170,"Acutec Precision Aerospace, Inc.","Acutec Precision Aerospace, Inc. Meadville 2",PA,336413,"Aircraft assemblies, subassemblies, and parts (except engines) manufacturing",3,3,7.93,1.13,38
+706433,"Precision Spring & Stamping Co","PRESSCO PRODUCTS",WA,336411,"Aircraft manufacturing",5,4,7.68,1.10,41
+322281,"The Boeing Company","IL013",IL,336411,"Aircraft manufacturing",7,7,7.66,1.19,117
+407063,"","NGAS-A560",CA,336411,"Aircraft Manufacturing",7,7,7.57,1.19,199
+1037830,"Magellan Aerospace Glendale","Magellan Aerospace Glendale",AZ,336413,"Universal joints, aircraft, manufacturing",3,3,7.40,1.13,221
+666798,"Landing Gear Technologies, LLC.","Landing Gear Technologies, LLC.",FL,336411,"Aircraft overhauling",3,3,7.27,1.20,110

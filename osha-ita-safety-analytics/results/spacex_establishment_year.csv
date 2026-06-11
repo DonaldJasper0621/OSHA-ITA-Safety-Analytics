@@ -1,0 +1,35 @@
+company_name,establishment_name,state,naics_code,year,annual_average_employees,total_hours_worked,intensity,tcr,dart
+Space Exploration Technologies,"McGregor, TX",TX,336414,2016,580,1436001,2476,3.80,2.60
+Space Exploration Technologies,"Kennedy Space Center",FL,336414,2016,50,148499,2970,21.60,6.80
+Space Exploration Technologies,"Cape Canaveral Air Force Station",FL,336414,2016,500,1263668,2527,1.20,0.40
+Space Exploration Technologies,"Space Launch Complex 4",CA,336414,2016,115,364490,3169,1.00,0.60
+Space Exploration Technologies,"Hawthorne",CA,336414,2021,6386,15578935,2440,1.20,0.80
+Space Exploration Technologies,"Vandenberg",CA,481212,2021,149,331088,2222,0.60,0.60
+Space Exploration Technologies,"Florida",FL,481212,2021,525,1374410,2618,3.00,0.80
+Space Exploration Technologies,"McGregor",TX,336414,2021,676,1469869,2174,2.40,1.40
+Space Exploration Technologies,"Hawthorne, CA",CA,336414,2022,6450,16327719,2531,1.80,0.80
+Space Exploration Technologies,"McGregor, TX",TX,336414,2022,574,1383550,2410,2.80,1.60
+Space Exploration Technologies,"Mountain View, CA",CA,336414,2022,81,175304,2164,0.00,0.00
+Space Exploration Technologies,"Redmond, WA",WA,336414,2022,826,2446969,2962,0.80,0.20
+Space Exploration Technologies,"Cape Canaveral SFS",FL,481212,2022,1477,3160713,2140,0.80,0.20
+Space Exploration Technologies,"Brownsville, TX",TX,336414,2022,1668,4328926,2595,4.80,3.80
+Space Exploration Technologies,"Hawthorne, CA",CA,336414,2023,7367,17444305,2368,1.60,0.80
+Space Exploration Technologies,"Cape Canaveral SFS",FL,481212,2023,1563,3196127,2045,2.60,1.80
+Space Exploration Technologies,"Vandenberg SFB",CA,481212,2023,346,656470,1897,2.80,1.20
+Space Exploration Technologies,"McGregor, TX",TX,336414,2023,606,1412046,2330,1.60,1.60
+Space Exploration Technologies,"Redmond, WA",WA,336414,2023,1555,3589438,2308,1.60,0.80
+Space Exploration Technologies,"West Coast Recovery",CA,336414,2023,32,78571,2455,7.60,5.00
+Space Exploration Technologies,"East Coast Recovery",FL,336414,2023,169,453545,2684,3.60,3.00
+Space Exploration Technologies,"Mountain View, CA",CA,336414,2023,105,163472,1557,0.00,0.00
+Space Exploration Technologies,"Brownsville, TX",TX,336414,2023,2124,5069370,2387,5.80,5.20
+Space Exploration Technologies,"Bastrop, TX",TX,336414,2023,356,241879,679,2.40,0.80
+Space Exploration Technologies,"Brownsville, TX",TX,336414,2024,2690,5953599,2213,4.20,3.00
+Space Exploration Technologies,"McGregor, TX",TX,336414,2024,622,1534575,2467,2.40,1.60
+Space Exploration Technologies,"Cape Canaveral SFS",FL,481212,2024,1554,3549413,2284,1.60,1.20
+Space Exploration Technologies,"Bastrop, TX",TX,334210,2024,963,1719577,1786,3.40,1.80
+Space Exploration Technologies,"West Coast Recovery",CA,481212,2024,37,105295,2846,7.60,1.80
+Space Exploration Technologies,"Redmond, WA",WA,334220,2024,1910,5025149,2631,1.20,1.00
+Space Exploration Technologies,"East Coast Recovery",FL,481212,2024,167,497337,2978,0.80,0.80
+Space Exploration Technologies,"Vandenberg SFB",CA,481212,2024,427,936047,2192,3.00,2.20
+Space Exploration Technologies,"Sunnyvale, CA",CA,334220,2024,130,329053,2531,0.00,0.00
+Space Exploration Technologies,"Hawthorne, CA",CA,336414,2024,7496,18469571,2464,1.40,0.60

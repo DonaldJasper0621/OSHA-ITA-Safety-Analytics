@@ -1,0 +1,11 @@
+# Raw data — do not commit (large, public records; see data/README.md)
+*.csv.gz
+data/*.csv
+data/*.CSV
+*.zip
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

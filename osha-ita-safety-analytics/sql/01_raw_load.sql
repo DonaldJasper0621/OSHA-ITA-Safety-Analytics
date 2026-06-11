@@ -1,0 +1,81 @@
+-- =====================================================================
+-- 01_raw_load.sql
+-- RAW layer: 5 all-STRING landing tables + COPY INTO loads.
+-- ---------------------------------------------------------------------
+-- NOTE: Reconstructed template. The exact column lists must match each
+-- OSHA source file's header for that year. RAW columns are ALL STRING on
+-- purpose -- the load must never fail on a bad value; typing happens in
+-- the CLEAN layer (02_clean_summary.sql) via TRY_TO_NUMBER.
+--
+-- Schema drift handled by keeping the years in SEPARATE tables:
+--   * Summary OLD (2016-2022) has no NAICS_YEAR; column order differs.
+--   * Summary 2023 vs 2024 swap positions of CREATED_TIMESTAMP /
+--     CHANGE_REASON.
+--   * Case detail 2023 uses YEAR_FILING_FOR; 2024 uses YEAR_OF_FILING.
+-- The CLEAN layer re-aligns them by column NAME.
+--
+-- Final RAW row counts (validated), 4,385,343 total:
+--   ITA_300A_SUMMARY_OLD_RAW   = 2,012,910   (2016-2022)
+--   ITA_300A_SUMMARY_2023_RAW  =   394,232
+--   ITA_300A_SUMMARY_2024_RAW  =   398,620
+--   ITA_CASE_DETAIL_2023_RAW   =   890,932
+--   ITA_CASE_DETAIL_2024_RAW   =   688,649
+-- A handful of malformed rows (~5 total, <0.001%) were skipped and logged.
+-- =====================================================================
+
+-- --- Example: create a RAW table (all STRING) ------------------------
+-- Repeat per source file with that file's exact columns/order.
+-- CREATE OR REPLACE TABLE ITA_DB.RAW.ITA_300A_SUMMARY_2023_RAW (
+--   ID                          STRING,
+--   ESTABLISHMENT_ID            STRING,
+--   ESTABLISHMENT_NAME          STRING,
+--   COMPANY_NAME                STRING,
+--   EIN                         STRING,
+--   STREET_ADDRESS              STRING,
+--   CITY                        STRING,
+--   STATE                       STRING,
+--   ZIP_CODE                    STRING,
+--   NAICS_CODE                  STRING,
+--   NAICS_YEAR                  STRING,
+--   INDUSTRY_DESCRIPTION        STRING,
+--   ESTABLISHMENT_TYPE          STRING,
+--   SIZE                        STRING,
+--   ANNUAL_AVERAGE_EMPLOYEES    STRING,
+--   TOTAL_HOURS_WORKED          STRING,
+--   NO_INJURIES_ILLNESSES       STRING,
+--   TOTAL_DEATHS                STRING,
+--   TOTAL_DAFW_CASES            STRING,
+--   TOTAL_DJTR_CASES            STRING,
+--   TOTAL_OTHER_CASES           STRING,
+--   TOTAL_DAFW_DAYS             STRING,
+--   TOTAL_DJTR_DAYS             STRING,
+--   TOTAL_INJURIES              STRING,
+--   TOTAL_SKIN_DISORDERS        STRING,
+--   TOTAL_RESPIRATORY_CONDITIONS STRING,
+--   TOTAL_POISONINGS            STRING,
+--   TOTAL_HEARING_LOSS          STRING,
+--   TOTAL_OTHER_ILLNESSES       STRING,
+--   CREATED_TIMESTAMP           STRING,
+--   CHANGE_REASON               STRING,
+--   YEAR_FILING_FOR             STRING
+-- );
+
+-- --- COPY INTO from the stage ----------------------------------------
+-- Summary files (uncompressed):
+-- COPY INTO ITA_DB.RAW.ITA_300A_SUMMARY_2023_RAW
+--   FROM @ITA_DB.RAW.ITA_STAGE/ITA_Data_2023.csv
+--   FILE_FORMAT = (FORMAT_NAME = ITA_DB.RAW.CSV_AUTO_SKIP_HEADER_FORMAT)
+--   ON_ERROR = CONTINUE;
+
+-- Case-detail file (gzip + latin1):
+-- COPY INTO ITA_DB.RAW.ITA_CASE_DETAIL_2024_RAW
+--   FROM @ITA_DB.RAW.ITA_STAGE/case_detail_2024.csv.gz
+--   FILE_FORMAT = (FORMAT_NAME = ITA_DB.RAW.CSV_GZIP_FORMAT)
+--   ON_ERROR = CONTINUE;
+
+-- --- Validate row counts per table -----------------------------------
+-- SELECT 'OLD'  AS t, COUNT(*) FROM ITA_DB.RAW.ITA_300A_SUMMARY_OLD_RAW
+-- UNION ALL SELECT '2023', COUNT(*) FROM ITA_DB.RAW.ITA_300A_SUMMARY_2023_RAW
+-- UNION ALL SELECT '2024', COUNT(*) FROM ITA_DB.RAW.ITA_300A_SUMMARY_2024_RAW
+-- UNION ALL SELECT 'CD2023', COUNT(*) FROM ITA_DB.RAW.ITA_CASE_DETAIL_2023_RAW
+-- UNION ALL SELECT 'CD2024', COUNT(*) FROM ITA_DB.RAW.ITA_CASE_DETAIL_2024_RAW;
