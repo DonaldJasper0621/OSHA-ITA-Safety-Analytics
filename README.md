@@ -1,168 +1,68 @@
-# OSHA Workplace-Injury Analytics — does running plants "hot" make them less safe?
+# OSHA Workplace Injury Risk Analytics — US Aerospace & SpaceX
 
-A SQL + cloud-warehouse analysis of **9 years of federal workplace-injury
-data** (2.4M+ establishment-years) that set out to find the point where
-high labor intensity starts to raise injury rates — and found the
-opposite.
+Turning 4.4M public workplace-injury records into a peer-benchmarking tool that flags the plants worth fixing — and shows what fixing them is worth.
 
-**Stack:** Snowflake (medallion RAW → CLEAN → ANALYTICS) · SQL (window
-functions, CTEs, `QUALIFY`) · Power BI / Tableau (dashboard) · OSHA ITA
-public data.
+*Snowflake · SQL · Power BI*
 
 ---
 
-## Executive summary
+## The short version
 
-A common operations assumption is that pushing a plant harder — more
-overtime, higher hours per worker — makes it less safe. I tested that
-against every establishment in OSHA's Injury Tracking Application from
-2016–2024.
+US aerospace manufacturing sounds dangerous, but as an *industry* it's actually one of the safest in manufacturing. The real risk isn't the industry — it's a specific set of plants that run persistently worse than their own peers, year after year. This project builds a tool that finds those plants from public OSHA data, estimates what their gap costs, and shows where prevention money actually pays off. The same method runs on any industry by changing one filter.
 
-**The assumption is false.** Within industry, higher operational
-intensity is associated with **flat-to-lower** injury rates, not higher.
-In manufacturing the median Total Case Rate *declines* as intensity rises
-(3.40 → 2.00 across bands), and the lowest-intensity establishments carry
-the **highest** injury rates. The pattern holds within 12 of 15
-manufacturing subsectors, so it is not a Simpson's-paradox artifact.
+## Dashboard
 
-The real driver of injury risk is **industry / work type** (median TCR
-ranges from ~0 in electronics to ~5.6 in wood products — a 5x+ spread
-that dwarfs any intensity effect), and secondarily a counterintuitive
-signal: **low-utilization, unstable workforces** (part-time / seasonal /
-high-turnover) are the hidden risk, most plausibly an experience effect.
+![Dashboard — overview](dashboard/page1.png)
+*Page 1 — the landscape: headline numbers, the intensity myth, and where aerospace sits among manufacturing industries.*
 
-**Actionable takeaway:** cutting overtime is not a safety lever. Safety
-investment should target high-hazard work and unstable/new workforces
-(training, onboarding), not labor intensity.
+![Dashboard — diagnostics](dashboard/page2.png)
+*Page 2 — the diagnostic: which plants lag their peers, which injuries drive cost, the SpaceX site comparison, and what the gap is worth.*
 
----
+## What I found (in plain language)
 
-## Business problem
+1. **Running plants harder doesn't make them less safe.** Higher labor intensity (longer hours per worker) isn't linked to higher injury rates — it's flat to slightly lower. Cutting overtime is not a safety lever.
+2. **Industry sets the baseline, and aerospace is already low-risk.** Injury rates vary about 4x across manufacturing; aerospace sits near the safe end, well below wood, metal, and food processing.
+3. **But 306 plants run persistently worse than their peers.** Comparing each plant to its *own* industry — not to manufacturing as a whole — isolates the plants with a real, controllable problem that industry averages hide.
+4. **The cost hides in a few injury types.** The most common injuries (struck-by, contact) are cheap — about 6–10 lost days each. The costly ones (overexertion, same-level falls) are rarer but run ~50 days each. About a quarter of injury types drive most of the lost time.
+5. **The opportunity is real and sized.** A typical persistent-outlier plant runs about **$167K/year** in avoidable injury cost — roughly **1.3% of industry profit**, or **$1.7M in sales** needed to offset it.
+6. **SpaceX case study.** SpaceX's mature flagship (Hawthorne) runs a low injury rate; its fast-scaling new site (Starbase) runs ~3x higher — at the *same* hours per worker. The gap isn't overtime; it points to workforce newness and process maturity, which is an onboarding/training opportunity, not a throughput problem.
 
-EHS and operations leaders need to know where to spend limited safety
-resources. "Reduce overtime to reduce injuries" is intuitive and widely
-assumed — but if it's wrong, money goes to an intervention that doesn't
-move the outcome. This project asks two questions:
+## A judgment call I'm proud of
 
-1. **Does operational intensity (hours per worker) actually predict
-   injury risk?** (Tests the overtime assumption.)
-2. **Within an industry, which establishments are persistently worse than
-   their peers?** A company can't change its industry (uncontrollable
-   risk), but it *can* fix the plants that underperform comparable
-   facilities (controllable risk). The scorecard separates the two.
+My first "avoidable cost" estimate came out around **$1.6 billion**. Before trusting it, I checked it against the industry total and saw it implied 75% of all injuries were avoidable — which can't be right. The cause was skewed data plus a few one-off bad years counted as chronic. I tightened the method to persistent multi-year outliers and reported the *typical* plant instead of a tail-driven total, landing on the defensible ~$167K/plant figure.
 
----
+Full write-up: [docs/analyst_judgment_inflated_metric.md](docs/analyst_judgment_inflated_metric.md).
 
-## Methodology
+## How it's built
 
-Three-layer Snowflake warehouse (medallion pattern):
+**Data.** OSHA Injury Tracking Application (ITA) public bulk files, 2016–2024 — 4.4M raw records across summary (300A) and case-detail (300/301) tables.
 
-- **RAW** — five all-string landing tables, 4.39M rows. Loads never fail;
-  schema drift across years handled by keeping years in separate tables.
-- **CLEAN** — one typed, standardized view unioning all years, with
-  derived metrics (operational intensity, TCR, DART) defined once.
-- **ANALYTICS** — deduplicated, size-filtered analysis base; one row per
-  establishment-year.
+**Stack.** Snowflake (ELT, medallion architecture: RAW → CLEAN → ANALYTICS), SQL, Power BI.
 
-Rates follow OSHA standards (TCR / DART per 200,000 hours). The
-intensity–rate relationship is always evaluated **within industry** to
-control for confounding, and reported as "associated with," never
-"causes." Full detail in [`docs/methodology.md`](docs/methodology.md).
+**Pipeline.** Raw CSVs land in a RAW layer (all text); SQL views then type-cast, normalize NAICS, derive rate metrics (per 200k hours), de-duplicate (QUALIFY / ROW_NUMBER), and filter to a clean ~2.4M-row analysis base. Data-quality checks at each step (row counts, null/label validation, sanity ranges).
 
-This was real data-quality work, not a clean dataset. Highlights (full
-log in [`docs/eda_findings.md`](docs/eda_findings.md)):
+**Method.** Within-industry peer benchmarking (industry-year medians via window functions), persistent-outlier detection (above peer median in 3+ years), event-severity analysis from case detail, and a cost model using the national average lost-time claim cost ($47,316, NSC/NCCI).
 
-- A nonsensical average intensity of **866,320** traced to data-entry
-  errors in the hours field (one site reported 16 *trillion* hours) →
-  switched to median + sanity bounds.
-- NAICS codes with inconsistent `.00` suffixes that would have split
-  industries → normalized with `SPLIT_PART`.
-- 4,703 exact-duplicate establishment-years → deduplicated with a
-  windowed `QUALIFY`, with a `COALESCE` fallback so blank-ID rows aren't
-  wrongly merged.
+## Reproducing for another industry
 
----
+The pipeline is industry-agnostic — point the scorecard and cost queries at a different NAICS prefix (e.g., automobile manufacturing 3361–3363) and the same outputs regenerate. The aerospace run is the worked example.
 
-## Skills demonstrated
-
-- **SQL:** CTEs, window functions (`ROW_NUMBER` + `QUALIFY` for dedup),
-  conditional aggregation, percentile/median functions, multi-table
-  `UNION ALL` with schema reconciliation.
-- **Cloud warehouse:** Snowflake medallion architecture, staging, file
-  formats, gzip + encoding handling on a 495MB → 82MB load.
-- **Analytical rigor:** median vs mean on skewed data, Simpson's-paradox
-  control, within-industry benchmarking, correlation-vs-causation
-  discipline, honest treatment of a rejected hypothesis.
-- **Communication:** translating an injury-rate finding into an
-  operations decision ("overtime isn't the lever").
-
----
-
-## Results
-
-**The intensity finding** (`results/intensity_bands_*.csv`,
-`within_industry_check.csv`): manufacturing median TCR by intensity band
-runs 3.40 → 3.00 → 2.60 → 2.40 → 2.60 → 2.40 → 2.00 — declining, not
-rising. Inverse holds within 12/15 subsectors.
-
-**The peer-benchmarking scorecard** (`results/aerospace_scorecard.csv`):
-aerospace establishments that are **persistently** above their 6-digit
-NAICS peer median (appear ≥3 years, above peers in ≥75% of years). The
-list surfaces recognizable firms running 5–10x their peer median — e.g.
-Scaled Composites (TCR 10.15 vs peer 1.18), and multiple Lockheed Martin,
-Boeing, GKN, Safran, and Magellan sites. The method is industry-agnostic:
-replicating to automobile manufacturing is a one-line filter change.
-
-**SpaceX case study** (`results/spacex_establishment_year.csv`): within
-SpaceX, sites vary sharply. Brownsville/Starbase (rapidly growing,
-TCR 4.2–5.8) is the highest-rate site, well above the 0.40 space-vehicle
-subsector median; Hawthorne (mature flagship, ~7,000+ employees,
-TCR 1.2–1.8) is relatively safe; McGregor (engine test) sits at 2.4–3.8.
-Both major sites run similar intensity (~2,200–2,500), so the gap is not
-intensity — consistent with the macro finding that workforce newness and
-work type, not overtime, drive risk.
-
-*(Dashboard: Power BI / Tableau Public — link to be added.)*
-
----
-
-## Next steps
-
-- **Cost layer:** attach dollar estimates to incidents (lost workdays ×
-  published lost-time-claim cost) to quantify the financial impact at
-  high-risk sites, using the Case Detail table.
-- **"What drives injuries":** use Case Detail event / source / body-part
-  fields to characterize *what kind* of incidents dominate at the
-  flagged establishments.
-- **Replicate the scorecard** to automobile manufacturing (3361/3362/
-  3363) — a single filter change.
-
----
-
-## Repository layout
+## Repo structure
 
 ```
-osha-ita-safety-analytics/
-├── README.md                  ← you are here
-├── sql/
-│   ├── 00_setup.sql           database, schemas, stage, file formats
-│   ├── 01_raw_load.sql        RAW landing tables + COPY INTO
-│   ├── 02_clean_summary.sql   typed/standardized CLEAN view
-│   ├── 03_analysis_base.sql   deduped, filtered analysis base
-│   ├── 04_eda.sql             data-quality checks
-│   ├── 05_intensity_analysis.sql   the core finding (hypothesis test)
-│   └── 06_scorecard.sql       peer-benchmarking scorecard + SpaceX
-├── docs/
-│   ├── methodology.md         rate definitions, filters, caveats
-│   └── eda_findings.md        data-quality decisions ("war stories")
-├── results/                   query-output CSVs (+ charts/ for screenshots)
-└── data/README.md             source link + how to reproduce (raw not committed)
+sql/         medallion build + analysis queries
+results/     analysis outputs (CSV) feeding the dashboard
+docs/        methodology, findings, the judgment write-up
+dashboard/   Power BI theme + screenshots
+data/        data source notes (raw files not committed)
 ```
 
-## Data & reproducibility
+## Honest limitations
 
-Built on public OSHA ITA data; raw files are **not** committed (large,
-public records). See [`data/README.md`](data/README.md) for the source
-link and run order. Company names appear because the data is public
-government record; they are presented factually for benchmarking, not as
-claims about any company.
+- This is **public, cross-company, self-reported** data. It supports a **method and a per-plant benchmark**, not an audited "$X for company Y." Everything is framed that way on purpose.
+- Injury-type labels (event/source/nature) come from OSHA's own **predicted** OIICS coding, so a portion is uncoded or low-confidence; the event breakdown is directional.
+- SpaceX's manufacturing NAICS (336414) isn't part of the case-detail collection, so the SpaceX view is at the establishment-summary level, not incident-level.
+
+---
+
+*Data: OSHA ITA (public domain). Cost benchmark: NSC Injury Facts / NCCI.*
